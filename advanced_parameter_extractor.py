@@ -12,7 +12,7 @@ from datetime import datetime
 class AdvancedSAPParameterExtractor:
     """Advanced parameter extraction using parameter configuration"""
     
-    def __init__(self, config_path: str = "parameter_config.yml"):
+    def __init__(self, config_path: str = "parameter_config_fixed.yml"):
         self.config_path = config_path
         self.parameter_config = self.load_parameter_config()
         self.field_mappings = self.build_field_mappings()
@@ -120,15 +120,25 @@ class AdvancedSAPParameterExtractor:
         else:
             value_regex = r'([A-Za-z0-9_\-\.]+)'
         
+        # Build regex pattern more carefully
         regex_pattern = pattern.replace('{value}', value_regex)
-        regex_pattern = regex_pattern.replace('(', r'\(').replace(')', r'\)')
-        regex_pattern = regex_pattern.replace('|', '|')
+        
+        # Don't escape parentheses that are part of the original pattern syntax
+        # Only escape literal parentheses, not regex grouping
         
         # Try case-insensitive match
-        match = re.search(regex_pattern, query, re.IGNORECASE)
-        if match:
-            value = match.group(-1)  # Last group should be the value
-            return self.clean_extracted_value(value, data_type)
+        try:
+            match = re.search(regex_pattern, query, re.IGNORECASE)
+            if match:
+                # Find the value group (should be the last captured group)
+                groups = match.groups()
+                if groups:
+                    value = groups[-1]  # Last group should be the value
+                    return self.clean_extracted_value(value, data_type)
+        except re.error as e:
+            # If regex fails, skip this pattern
+            print(f"    Regex error in pattern '{pattern}': {e}")
+            pass
         
         return None
     
@@ -278,6 +288,7 @@ class AdvancedSAPParameterExtractor:
                 'parameters': {},
                 'filter_string': "",
                 'complete_url': base_endpoint or "",
+                'parameter_count': 0,
                 'message': "No parameters found - returning base endpoint"
             }
         
