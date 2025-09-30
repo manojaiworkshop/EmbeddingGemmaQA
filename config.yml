@@ -1,0 +1,299 @@
+
+# SAP Tools Configuration
+sap_tools:
+  # Qdrant vector database settings
+  qdrant:
+    url: "http://10.96.162.246:6333"
+    timeout: 10.0
+    collection_name: "sap_intents"
+    vector_size: 384
+    distance_metric: "cosine"
+  
+  # Embedding model configuration
+  embedding:
+    model_name: "all-MiniLM-L6-v2"
+    vector_dimension: 384
+    device: "cpu"  # Options: "cpu", "cuda", "auto" (auto-detect GPU), "cuda:0" (specific GPU)
+    device_map: null  # Optional: specific device mapping for multi-GPU setups
+    trust_remote_code: false  # Trust remote code for custom models
+    
+    # GPU/CPU Configuration Examples:
+    # For CPU-only: device: "cpu"
+    # For auto-detect: device: "auto" (will use GPU if available, fallback to CPU)
+    # For specific GPU: device: "cuda:0" (use first GPU)
+    # For multiple GPUs: device: "cuda" with device_map: "auto"
+  
+  # SAP API configuration
+  sap_api:
+    base_url: "http://192.168.225.176:8000"
+    username: "DEVELOPER"
+    password: "Down1oad"
+    timeout: 10
+    mock_mode: false  # Set to false for real SAP calls
+  
+  # Intent processing settings
+  intent_processing:
+    confidence_threshold: 0.7
+    search_limit: 1
+    batch_size: 5
+    max_retries: 3
+    retry_wait_multiplier: 1
+    retry_wait_min: 4
+    retry_wait_max: 10
+  
+  # FastAPI server settings
+  server:
+    host: "0.0.0.0"
+    port: 8099
+    reload: true
+  
+  # MCP server settings
+  mcp_server:
+    name: "SAPToolsMCPServer"
+    host: "0.0.0.0"
+    port: 9002
+    transport: "streamable-http"
+    dependencies:
+      - "qdrant-client"
+      - "sentence-transformers" 
+      - "langgraph"
+      - "tenacity"
+      - "fastmcp"
+  
+  # Department-wise Intents Configuration
+  departments_intents:
+    # Materials Management (MM) Department
+    mm_intents:
+      # SELECT type endpoint - retrieves all PO materials data
+      - id: 1
+        intent: "select_all_po_materials"
+        phrases:
+          - "show all purchase orders"
+          - "get all PurchaseOrder data"
+          - "list all purchase order items"
+          - "display all PO materials"
+          - "fetch all purchase orders"
+          - "retrieve all PurchaseOrder records"
+          - "show purchase order list"
+          - "get PO data"
+          - "display purchase orders"
+          - "fetch PO materials"
+          - "show me purchase orders"
+          - "get purchase order information"
+          - "list purchase orders"
+          - "display PO data"
+          - "retrieve purchase orders"
+          - "show all PO records"
+          - "get all purchase order info"
+          - "fetch all PO data"
+          - "display purchase order information"
+          - "show PO materials data"
+          - "get purchase orders list"
+          - "retrieve all PO data"
+          - "show purchase order information"
+          - "fetch purchase order records"
+          - "get all POs from system"
+          - "display all purchase order records"
+          - "show me all PO data"
+          - "retrieve purchase order information"
+          - "get POs from database"
+          - "show purchase orders from system"
+          - "fetch all purchase order information"
+          - "display POs from database"
+          - "get all PO entries"
+          - "show purchase order entries"
+          - "retrieve PO entries"
+          - "fetch purchase orders from system"
+          - "display all PO data"
+          - "get purchase order records"
+          - "show all PO info"
+          - "retrieve PO data"
+          - "fetch PO data"
+          - "display purchase order records"
+          - "get PO records"
+          - "show purchase order information"
+          - "retrieve all PO info"
+          - "fetch all purchase order entries"
+          - "display PO information"
+          - "get PO info"
+          - "show all purchase order information"
+          - "retrieve purchase order records"
+          - "fetch purchase order information"
+          - "show purchase order master data"
+          - "get purchase order master records"
+        endpoint_template: "/sap/opu/odata/sap/Z_CDS_VIEW_ALL_CDS/Z_Cds_View_All?$format=json&$top=5"
+      
+      # CONDITIONAL type endpoint - filters based on view columns
+      - id: 2
+        intent: "filter_po_materials_conditional"
+        phrases:
+          - "filter by PurchaseOrder number"
+          - "get materials by Item number"
+          - "show data by CreatedOn date"
+          - "filter by DocType document type"
+          - "get by PurchasingOrg organization"
+          - "show by PurchasingGroup group"
+          - "filter by VendorId vendor ID"
+          - "get by VendorName vendor name"
+          - "show by Material material number"
+          - "filter by ShortText description"
+          - "get by Plant plant code"
+          - "show by OrderQty quantity"
+          - "filter by UoM unit of measure"
+          - "get by NetPrice net price"
+          - "show by Currency currency code"
+          - "filter by FirstDeliveryDate delivery date"
+          - "get by ScheduledQty scheduled quantity"
+          - "show by GRQty goods receipt quantity"
+          - "filter by IRQty invoice receipt quantity"
+          - "get PurchaseOrder where number equals"
+          - "show Item where item number is"
+          - "filter CreatedOn where date is"
+          - "get DocType where document type equals"
+          - "show PurchasingOrg where organization is"
+          - "filter PurchasingGroup where group equals"
+          - "get VendorId where vendor ID is"
+          - "show VendorName where vendor name equals"
+          - "filter Material where material number is"
+          - "get ShortText where description contains"
+          - "show Plant where plant code equals"
+          - "filter OrderQty where quantity is"
+          - "get UoM where unit of measure equals"
+          - "show NetPrice where price is"
+          - "filter Currency where currency code equals"
+          - "get FirstDeliveryDate where delivery date is"
+          - "show ScheduledQty where scheduled quantity equals"
+          - "filter GRQty where goods receipt quantity is"
+          - "get IRQty where invoice receipt quantity equals"
+          - "show purchase orders for PurchaseOrder"
+          - "filter materials by Item"
+          - "get records by CreatedOn"
+          - "show data for DocType"
+          - "filter by PurchasingOrg code"
+          - "get items by PurchasingGroup"
+          - "show records for VendorId"
+          - "filter data by VendorName"
+          - "get materials for Material"
+          - "show items by ShortText"
+          - "filter records by Plant"
+          - "get data by OrderQty"
+        endpoint_template: "/sap/opu/odata/sap/Z_CDS_VIEW_ALL_CDS/Z_Cds_View_All?$format=json?$filter={condition}&$format=json&$top=5"
+    
+    # Financial Accounting (FI) Department
+    fi_intents:
+      - id: 4
+        intent: "filter_by_codid_and_codva"
+        phrases:
+          - "filter by codid C001 and codva VALUE_01"
+          - "get records where codid is C001 and codva is VALUE_01"
+          - "show entries for codid C001 and codva VALUE_01"
+        endpoint_template: "/sap/opu/odata/sap/ZFIXD_VIEW_CDS/zfixd_view?$filter=codid eq '{codid}' and codva eq '{codva}' & $format=json"
+      
+      - id: 5
+        intent: "sort_by_codid_desc"
+        phrases:
+          - "sort by codid descending"
+          - "order by codid in descending order"
+          - "list records sorted by codid desc"
+        endpoint_template: "/sap/opu/odata/sap/ZFIXD_VIEW_CDS/zfixd_viewSet?$orderby=codid desc"
+      
+      - id: 6
+        intent: "get_first_5_financial"
+        phrases:
+          - "get first 5 financial entries"
+          - "show top 5 financial records"
+          - "list first five financial entries"
+        endpoint_template: "/sap/opu/odata/sap/Z_CDS_VIEW_SAMPLE_CDS/Z_Cds_View_Sample?$top=5"
+    
+    # Sales and Distribution (SD) Department
+    sd_intents:
+      - id: 7
+        intent: "get_sales_orders"
+        phrases:
+          - "get all sales orders"
+          - "show sales orders"
+          - "list sales orders"
+        endpoint_template: "/sap/opu/odata/sap/SD_SALES_CDS/sales_orders?$format=json"
+      
+      - id: 8
+        intent: "filter_customer_by_region"
+        phrases:
+          - "filter customers by region NORTH"
+          - "get customers from NORTH region"
+          - "show customers in NORTH region"
+        endpoint_template: "/sap/opu/odata/sap/SD_CUSTOMER_CDS/customers?$filter=region eq '{region}'&$format=json"
+    
+    # Production Planning (PP) Department
+    pp_intents:
+      - id: 9
+        intent: "get_production_orders"
+        phrases:
+          - "get all production orders"
+          - "show production orders"
+          - "list production orders"
+        endpoint_template: "/sap/opu/odata/sap/PP_PRODUCTION_CDS/production_orders?$format=json"
+      
+      - id: 10
+        intent: "filter_bom_by_material"
+        phrases:
+          - "filter BOM by material MAT001"
+          - "get BOM for material MAT001"
+          - "show BOM of material MAT001"
+        endpoint_template: "/sap/opu/odata/sap/PP_BOM_CDS/bom?$filter=material eq '{material}'&$format=json"
+  
+  # Mock data for testing
+  mock_data:
+    - codid: "C001"
+      codva: "VALUE_01"
+      description: "Vendor Payment"
+      amount: 1000.50
+      date: "2025-01-01"
+    
+    - codid: "C002"
+      codva: "VALUE_02"
+      description: "Supplier Invoice"
+      amount: 2500.75
+      date: "2025-02-15"
+    
+    - codid: "VEN001"
+      codva: "SUPPLY_A"
+      description: "Raw Material Purchase"
+      amount: 5000.00
+      date: "2025-03-10"
+    
+    - codid: "VEN002"
+      codva: "SUPPLY_B"
+      description: "Equipment Lease"
+      amount: 3200.25
+      date: "2025-04-20"
+    
+    - codid: "C003"
+      codva: "VALUE_03"
+      description: "Consulting Fee"
+      amount: 1500.00
+      date: "2025-05-05"
+    
+    - codid: "VEN003"
+      codva: "SUPPLY_C"
+      description: "Maintenance Contract"
+      amount: 2000.00
+      date: "2025-06-30"
+    
+    - codid: "C004"
+      codva: "VALUE_04"
+      description: "Travel Expense"
+      amount: 800.00
+      date: "2025-07-17"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      enabled: true
+    file:
+      enabled: false
+      filename: "sap_tools.log"
+      max_bytes: 10485760  # 10MB
+      backup_count: 5

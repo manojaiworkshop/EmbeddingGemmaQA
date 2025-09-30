@@ -1,0 +1,281 @@
+# Enhanced Parameter Detection Configuration
+# This file maps column names to parameter patterns and synonyms
+
+parameter_mapping:
+  # Purchase Order View Column Mappings (ZC_PO_List)
+  po_materials_parameters:
+    PurchaseOrder:
+      field_name: "PurchaseOrder"
+      odata_field: "PurchaseOrder"
+      synonyms: ["purchase order", "po number", "po", "purchase order number", "ebeln", "order number"]
+      patterns: 
+        - "purchase order (is|equals|=) {value}"
+        - "po (number|=|equals|is) {value}"
+        - "purchase order number {value}"
+        - "ebeln {value}"
+      data_type: "string"
+      example_values: ["4500000001", "4500000002"]
+    
+    Item:
+      field_name: "Item"
+      odata_field: "Item" 
+      synonyms: ["item", "item number", "line item", "po item", "ebelp", "line"]
+      patterns:
+        - "item (number|is|equals|=) {value}"
+        - "line item {value}"
+        - "po item {value}"
+        - "ebelp {value}"
+      data_type: "string"
+      example_values: ["10", "20", "30"]
+    
+    CreatedOn:
+      field_name: "CreatedOn"
+      odata_field: "CreatedOn"
+      synonyms: ["created on", "creation date", "date created", "bedat", "document date"]
+      patterns:
+        - "created on {value}"
+        - "creation date (is|equals|=) {value}"
+        - "date created {value}"
+        - "bedat {value}"
+      data_type: "date"
+      example_values: ["2025-01-15", "2025-02-20"]
+    
+    DocType:
+      field_name: "DocType"
+      odata_field: "DocType"
+      synonyms: ["document type", "doc type", "bsart", "po type"]
+      patterns:
+        - "document type (is|equals|=) {value}"
+        - "doc type {value}"
+        - "bsart {value}"
+        - "po type {value}"
+      data_type: "string"
+      example_values: ["NB", "ZNB", "FO"]
+    
+    PurchasingOrg:
+      field_name: "PurchasingOrg"
+      odata_field: "PurchasingOrg"
+      synonyms: ["purchasing organization", "purchasing org", "ekorg", "porg", "organization", "code", "org code", "company code"]
+      patterns:
+        - "purchasing org(anization)? (is|equals|=) {value}"
+        - "ekorg {value}"
+        - "porg {value}"
+        - "organization {value}"
+        - "code (is|equals|=) {value}"
+        - "org code {value}"
+        - "company code {value}"
+      data_type: "string"
+      example_values: ["100", "1000", "2000", "3000"]
+    
+    PurchasingGroup:
+      field_name: "PurchasingGroup"
+      odata_field: "PurchasingGroup"
+      synonyms: ["purchasing group", "pgroup", "ekgrp", "buyer group"]
+      patterns:
+        - "purchasing group (is|equals|=) {value}"
+        - "pgroup {value}"
+        - "ekgrp {value}"
+        - "buyer group {value}"
+      data_type: "string"
+      example_values: ["001", "002", "100"]
+    
+    VendorId:
+      field_name: "VendorId"
+      odata_field: "VendorId"
+      synonyms: ["vendor id", "vendor", "lifnr", "supplier id", "supplier"]
+      patterns:
+        - "vendor (id|=|is|equals) {value}"
+        - "lifnr {value}"
+        - "supplier (id|=|is|equals) {value}"
+        - "vendor {value}"
+      data_type: "string"
+      example_values: ["100001", "100002", "200001"]
+    
+    VendorName:
+      field_name: "VendorName"
+      odata_field: "VendorName"
+      synonyms: ["vendor name", "supplier name", "name1", "vendor company"]
+      patterns:
+        - "vendor name (is|equals|=) {value}"
+        - "supplier name {value}"
+        - "name1 {value}"
+        - "vendor company {value}"
+      data_type: "string"
+      example_values: ["ABC Corp", "XYZ Ltd", "Tech Solutions"]
+    
+    Material:
+      field_name: "Material"
+      odata_field: "Material"
+      synonyms: ["material", "material number", "matnr", "part number", "product"]
+      patterns:
+        - "material (number|is|equals|=) {value}"
+        - "matnr {value}"
+        - "part number {value}"
+        - "product {value}"
+      data_type: "string"
+      example_values: ["MAT001", "MAT002", "PART123"]
+    
+    ShortText:
+      field_name: "ShortText"
+      odata_field: "ShortText"
+      synonyms: ["short text", "description", "txz01", "material description"]
+      patterns:
+        - "short text (is|equals|contains) {value}"
+        - "description (contains|is|equals) {value}"
+        - "txz01 {value}"
+        - "material description {value}"
+      data_type: "string"
+      example_values: ["Steel Rod", "Plastic Component", "Electronic Part"]
+    
+    Plant:
+      field_name: "Plant"
+      odata_field: "Plant"
+      synonyms: ["plant", "plant code", "werks", "location", "site"]
+      patterns:
+        - "plant (code|is|equals|=) {value}"
+        - "werks {value}"
+        - "location {value}"
+        - "site {value}"
+      data_type: "string"
+      example_values: ["1000", "2000", "3000"]
+    
+    OrderQty:
+      field_name: "OrderQty"
+      odata_field: "OrderQty"
+      synonyms: ["order quantity", "quantity", "qty", "menge", "order qty"]
+      patterns:
+        - "order quantity (is|equals|=|>) {value}"
+        - "quantity {value}"
+        - "qty {value}"
+        - "menge {value}"
+      data_type: "decimal"
+      example_values: ["100", "250.5", "1000"]
+    
+    UoM:
+      field_name: "UoM"
+      odata_field: "UoM"
+      synonyms: ["unit of measure", "uom", "unit", "meins"]
+      patterns:
+        - "unit of measure (is|equals|=) {value}"
+        - "uom {value}"
+        - "unit {value}"
+        - "meins {value}"
+      data_type: "string"
+      example_values: ["EA", "KG", "M", "PC"]
+    
+    NetPrice:
+      field_name: "NetPrice"
+      odata_field: "NetPrice"
+      synonyms: ["net price", "price", "netpr", "cost", "rate"]
+      patterns:
+        - "net price (is|equals|=|>) {value}"
+        - "price {value}"
+        - "netpr {value}"
+        - "cost {value}"
+        - "rate {value}"
+      data_type: "decimal"
+      example_values: ["10.50", "25.00", "100.75"]
+    
+    Currency:
+      field_name: "Currency"
+      odata_field: "Currency"
+      synonyms: ["currency", "currency code", "waers"]
+      patterns:
+        - "currency (code|is|equals|=) {value}"
+        - "waers {value}"
+        - "currency {value}"
+      data_type: "string"
+      example_values: ["USD", "EUR", "INR"]
+    
+    FirstDeliveryDate:
+      field_name: "FirstDeliveryDate"
+      odata_field: "FirstDeliveryDate"
+      synonyms: ["first delivery date", "delivery date", "eindt", "delivery", "ship date"]
+      patterns:
+        - "first delivery date (is|equals|=) {value}"
+        - "delivery date {value}"
+        - "eindt {value}"
+        - "delivery {value}"
+        - "ship date {value}"
+      data_type: "date"
+      example_values: ["2025-01-30", "2025-03-15"]
+    
+    ScheduledQty:
+      field_name: "ScheduledQty"
+      odata_field: "ScheduledQty"
+      synonyms: ["scheduled quantity", "scheduled qty", "sched qty"]
+      patterns:
+        - "scheduled quantity (is|equals|=|>) {value}"
+        - "scheduled qty {value}"
+        - "sched qty {value}"
+      data_type: "decimal"
+      example_values: ["100", "250.5", "1000"]
+    
+    GRQty:
+      field_name: "GRQty"
+      odata_field: "GRQty"
+      synonyms: ["goods receipt quantity", "gr quantity", "gr qty", "received qty"]
+      patterns:
+        - "goods receipt quantity (is|equals|=|>) {value}"
+        - "gr quantity {value}"
+        - "gr qty {value}"
+        - "received qty {value}"
+      data_type: "decimal"
+      example_values: ["95", "240.0", "980"]
+    
+    IRQty:
+      field_name: "IRQty"
+      odata_field: "IRQty"
+      synonyms: ["invoice receipt quantity", "ir quantity", "ir qty", "invoiced qty"]
+      patterns:
+        - "invoice receipt quantity (is|equals|=|>) {value}"
+        - "ir quantity {value}"
+        - "ir qty {value}"
+        - "invoiced qty {value}"
+      data_type: "decimal"
+      example_values: ["90", "230.0", "950"]
+    
+    Salary:
+      field_name: "Salary"
+      odata_field: "Salary"
+      synonyms: ["salary", "pay", "compensation", "wage", "income", "remuneration"]
+      patterns:
+        - "salary (is|equals|=|>|<) {value}"
+        - "pay (is|equals|=|>|<) {value}"
+        - "compensation {value}"
+        - "wage {value}"
+        - "income {value}"
+        - "remuneration {value}"
+      data_type: "decimal"
+      example_values: ["50000", "75000.50", "100000"]
+    
+    Department:
+      field_name: "Department"
+      odata_field: "Department"
+      synonyms: ["department", "dept", "division", "unit", "section", "team", "org unit"]
+      patterns:
+        - "department (is|equals|=) {value}"
+        - "dept (is|equals|=) {value}"
+        - "division {value}"
+        - "unit {value}"
+        - "section {value}"
+        - "team {value}"
+        - "org unit {value}"
+      data_type: "string"
+      example_values: ["IT", "HR", "Finance", "Sales", "Marketing", "Operations"]
+
+# Common parameter patterns for all intents
+common_patterns:
+  comparison_operators:
+    equals: ["is", "equals", "=", "equal to"]
+    greater_than: ["greater than", ">", "more than", "above"]
+    less_than: ["less than", "<", "below", "under"]
+    contains: ["contains", "includes", "has", "like"]
+    not_equals: ["not equal to", "!=", "not", "different from"]
+  
+  value_extraction:
+    quoted_strings: '"([^"]+)"'
+    single_quoted: "'([^']+)'"
+    alphanumeric: "([A-Za-z0-9]+)"
+    numbers: "([0-9]+\.?[0-9]*)"
+    dates: "(\d{4}-\d{2}-\d{2})"
